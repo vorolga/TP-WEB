@@ -1,0 +1,60 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}
+    Question
+{% endblock title %}
+
+{% block content %}
+    <div class="col-9">
+        <div class="oneQuestion">
+            <div class="avatarRatingQuestions col-3">
+                <a class="media-left" href="#"><img class="img-circle imgOneQuestionProfile" alt="Профиль пользователя"
+                                                    src="{% static "img/user.jpg" %}"></a>
+                <div class="mar-btm">
+                    <p>Максим</p>
+                </div>
+                <div class="btn-group pad-ver">
+                    <a class="btn btn-sm btn-default btn-hover-success" href="#"><i class="fa fa-thumbs-up"></i></a>
+                    <p class="countLikes">+5</p>
+                    <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i class="fa fa-thumbs-down"></i></a>
+                </div>
+            </div>
+            <div class="questionInfo col-9">
+                <p class="questionName">What is Bootstrap?</p>
+                <p class="question">Bootstrap — свободный набор инструментов для создания сайтов и веб-приложений.
+                    Включает в себя HTML- и CSS-шаблоны оформления для типографики, веб-форм, кнопок, меток, блоков
+                    навигации и прочих компонентов веб-интерфейса, включая JavaScript-расширения.
+                    Bootstrap — свободный набор инструментов для создания сайтов и веб-приложений. Включает в себя HTML-
+                    и CSS-шаблоны оформления для типографики, веб-форм, кнопок, меток, блоков навигации и прочих
+                    компонентов веб-интерфейса, включая JavaScript-расширения.
+                    Bootstrap — свободный набор инструментов для создания сайтов и веб-приложений. Включает в себя HTML-
+                    и CSS-шаблоны оформления для типографики, веб-форм, кнопок, меток, блоков навигации и прочих
+                    компонентов веб-интерфейса, включая JavaScript-расширения.
+                </p>
+                <div class="footerQuestion">
+                    <p class="questionTags">Tags:</p>
+                    <a href="{% url 'tag' "tag_name" %}" class="questionTag">black-jack</a>
+                    <a href="{% url 'tag' "tag_name" %}" class="questionTag">bender</a>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        {% for answer in answers %}
+            {% include "base/single_answer.html" %}
+        {% endfor %}
+
+        <hr>
+
+        <div class="mb-3">
+            <label for="answer" class="form-label">Your answer:</label>
+            <textarea class="form-control" id="answer" rows="7" placeholder="Enter your answer here..."
+                      maxlength="2000"></textarea>
+            <button onclick='location.href="{% url 'question' 1 %}"' type="button" class="btnAnswer btn-outline-secondary"><i class="fa fa-pencil"></i>Answer</button>
+        </div>
+
+        {% include "base/paginator_answers.html" %}
+    </div>
+{% endblock content %}
+

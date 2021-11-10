@@ -1,0 +1,25 @@
+{% load static %}
+
+<div class="questionBlock">
+    <div class="avatarRatingQuestions col-3">
+        <img class="img-circle imgQuestionProfile" alt="Профиль пользователя" src="{% static "img/user.jpg" %}">
+        <div class="mar-btm">
+            <p>Максим</p>
+        </div>
+        <div class="btn-group pad-ver">
+            <a class="btn btn-sm btn-default btn-hover-success" href="#"><i class="fa fa-thumbs-up"></i></a>
+            <p class="countLikes">+5</p>
+            <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i class="fa fa-thumbs-down"></i></a>
+        </div>
+    </div>
+    <div class="questionInfo col-9">
+        <a href="{% url 'question' questions.number %}" class="questionName">{{ question.title }}</a>
+        <p class="question">{{ question.text}}</p>
+        <div class="footerQuestion">
+            <a href="{% url 'question' questions.number %}" class="numberAnswers">answers(4)</a>
+            <p class="questionTags">Tags:</p>
+            <a href="{% url 'tag' "tag_name" %}" class="questionTag">black-jack</a>
+            <a href="{% url 'tag' "tag_name" %}" class="questionTag">bender</a>
+        </div>
+    </div>
+</div>

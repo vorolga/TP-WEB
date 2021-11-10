@@ -1,0 +1,25 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}
+    Tag
+{% endblock title %}
+
+{% block content %}
+    <div class="col-9 listQuestions">
+        <div class="questionHeaders d-flex align-items-center">
+            <h2>Tag: bender</h2>
+        </div>
+
+
+        {% for question in questions %}
+            {% include "base/single_question.html" %}
+        {% endfor %}
+
+        {% include "base/paginator_questions.html" %}
+    </div>
+{% endblock content %}
+
+
+
+

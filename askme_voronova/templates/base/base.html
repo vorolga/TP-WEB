@@ -1,0 +1,122 @@
+{% load static %}
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %} {% endblock title %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="{% static "css/my.css" %}" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column h-100">
+<header>
+    <nav class="navbar navbar-expand-md fixed-top">
+        <div class="container-fluid navbarContainer">
+            <a class="navbar-brand logo col-3 d-flex" href="{% url 'index' %}">AskVoronova</a>
+
+            <div class="d-flex searchBox col-6 justify-content-center">
+                <form onclick='location.href="{% url 'index' %}"' class="d-flex searchBox col-9 justify-content-start">
+                    <label class="col-9">
+                        <input class="form-control" type="text" placeholder="Search">
+                    </label>
+                    <form>
+                        <button class="btn col-3 btn-outline-secondary btnSearch" type="button">Search</button>
+                    </form>
+                </form>
+
+                <form class="btnAsk col-3 d-flex justify-content-end">
+                    <button onclick='location.href="{% url 'ask' %}"' type="button" class="btn btn-outline-secondary">Ask!</button>
+                </form>
+            </div>
+
+            <!--Для неавторизированных пользователей-->
+{#            <div class="profile col-3 d-flex justify-content-end">#}
+{#              <div class="profileHrefs">#}
+{#                <a class="profileHrefsLogin" href="{% url 'login' %}">log in </a>#}
+{#                <a href="{% url 'signup' %}">register</a>#}
+{#              </div>#}
+{#            </div>#}
+
+            <!--Для авторизированных пользователей-->
+            <div class="profile col-3 d-flex justify-content-end align-items-center">
+                <img class="col-2 navbarAvatar d-flex align-items-center" src="{% static "img/user.jpg" %}" alt="">
+                <div class="col-6 d-flex flex-column justify-content-center align-items-center">
+                    <div class="name">Olga Voronova</div>
+                    <div class="profileHrefs">
+                        <a class="profileHrefSettings" href="{% url 'settings' %}">settings </a>
+                        <a href="{% url 'index' %}">log out </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Begin page content -->
+<main class="flex-shrink-0">
+    <div class="container">
+        <div class="row">
+            {% block content %}
+            {% endblock content %}
+
+            <div class="col-3 rightColumn">
+                <div class="popularTags">
+                    <h2>Popular tags</h2>
+
+                    <div>
+                        <a href="{% url 'tag' "tag_name" %}" class="tag redTag">perl</a>
+                        <a href="{% url 'tag' "tag_name" %}" class="tag">python</a>
+                        <a href="{% url 'tag' "tag_name" %}" class="tag greenTag">TechnoPark</a>
+                        <a href="{% url 'tag' "tag_name" %}" class="tag greenTag">MySql</a>
+                        <a href="{% url 'tag' "tag_name" %}" class="tag">django</a>
+                        <a href="{% url 'tag' "tag_name" %}" class="tag orangeTag">Mail.ru</a>
+                        <a href="{% url 'tag' "tag_name" %}" class="tag redTag">Firefox</a>
+                    </div>
+                </div>
+                <div class="bestMembers">
+                    <h2>Best Members</h2>
+
+                    <div>
+                        <p class="member">Mr.Freeman</p>
+                        <p class="member">Dr.House</p>
+                        <p class="member">Bender</p>
+                        <p class="member">V Pupkin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer mt-3 py-3 bg-light">
+    <div class="container">
+        <span class="text-muted">Made by Voronova Olga</span>
+    </div>
+</footer>
+
+
+</body>
+</html>

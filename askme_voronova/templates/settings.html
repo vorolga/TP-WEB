@@ -1,0 +1,45 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}
+    Settings
+{% endblock title %}
+
+{% block content %}
+    <div class="col-9">
+        <div class="questionHeaders d-flex align-items-center">
+            <h2>Settings: Olga Voronova</h2>
+        </div>
+
+        <form class="g-3 d-flex flex-column">
+            <div class="col-6 mb-4">
+                <label for="login" class="form-label">Login</label>
+                <input type="text" class="form-control" id="login" placeholder="Login" maxlength="50" required>
+            </div>
+            <div class="col-6 mb-4">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" placeholder="Email" maxlength="50"
+                       aria-describedby="emailHelp">
+            </div>
+            <div class="col-6 mb-4">
+                <label for="nickname" class="form-label">NickName</label>
+                <input type="text" class="form-control" id="nickname" maxlength="50" placeholder="NickName" required>
+            </div>
+
+            <div class="col-6 mb-4">
+                <label for="uploadAvatar" class="form-label">Upload Avatar</label>
+                <img class="col-12 mb-3 d-flex align-items-center" src="../static/img/user.jpg" alt="">
+                <input type="file" class="form-control" id="uploadAvatar" accept="image/jpeg" aria-label="file example"
+                       required>
+            </div>
+            <div class="col-12 mb-3">
+                <button onclick='location.href="{% url 'index' %}"' class="btn btn-outline-secondary" type="submit"><i class="fa fa-pencil"></i>Save</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
+
+
+
+
+

@@ -1,0 +1,206 @@
+main > .container {
+  padding: 60px 15px 0;
+}
+
+main {
+    flex: 1;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  padding: 5px;
+  margin: 10px;
+  border-radius: 50%;
+}
+
+.navbar {
+  background-color: aliceblue;
+}
+
+header {
+  margin-bottom: 20px;
+}
+
+/*.navbarContainer {*/
+/*  padding: 0px 50px;*/
+/*}*/
+
+.logo {
+  color: #343a40;
+  padding-left: 50px;
+}
+
+.logo:hover {
+  color: #343a40;
+}
+
+.profileHrefs {
+  display: flex;
+}
+
+.profileHrefs a {
+  color: #343a40;
+}
+
+.navbarAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.profileHrefSettings {
+  margin-right: 10px;
+}
+
+.profile {
+  padding-right: 50px;
+}
+
+.profileHrefsLogin {
+  margin-right: 10px;
+}
+
+.rightColumn {
+    position: fixed;
+    right: 0;
+}
+
+.popularTags {
+  margin-bottom: 20px;
+}
+
+.member {
+  margin-bottom: 5px;
+  font-size: 20px;
+}
+
+.tag {
+    margin-right: 10px;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.greenTag {
+    color: green;
+    font-size: 21px;
+}
+
+.redTag {
+    color: red;
+    font-size: 22px;
+}
+
+.orangeTag {
+    color: orange;
+    font-size: 23px;
+}
+
+
+.questionBlock {
+    margin-top: 20px;
+    border: 2px solid #343a40;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+
+}
+
+.imgQuestionProfile {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+
+}
+
+.hotQuestionsLink {
+    margin-left: 60px;
+}
+
+.countLikes {
+    width: 30px;
+    text-align: center;
+    color: darkgreen;
+    margin-bottom: 0;
+}
+
+.avatarRatingQuestions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.questionName {
+    font-size: 25px;
+}
+
+.question {
+  margin-top: 15px;
+}
+
+.numberAnswers {
+    margin-right: 20px;
+}
+
+.questionTags {
+    margin-bottom: 0;
+    margin-right: 10px;
+}
+
+.questionTag {
+    margin-right: 15px;
+}
+
+.footerQuestion {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.pagination {
+    margin-top: 40px;
+}
+
+.oneQuestion {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+}
+
+.imgOneQuestionProfile {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.btnAnswer {
+    margin-top: 10px;
+}
+
+.askQuestion {
+    margin-top: 20px;
+}
+
+.askQuestionText {
+    margin-bottom: 20px;
+}
+
+.questionHeaders {
+    margin-bottom: 20px;
+}
+
+footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.btnCreateNewAccount {
+    margin-left: 20px;
+}
