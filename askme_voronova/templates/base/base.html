@@ -53,24 +53,24 @@
             </div>
 
             <!--Для неавторизированных пользователей-->
-{#            <div class="profile col-3 d-flex justify-content-end">#}
-{#              <div class="profileHrefs">#}
-{#                <a class="profileHrefsLogin" href="{% url 'login' %}">log in </a>#}
-{#                <a href="{% url 'signup' %}">register</a>#}
-{#              </div>#}
-{#            </div>#}
-
-            <!--Для авторизированных пользователей-->
-            <div class="profile col-3 d-flex justify-content-end align-items-center">
-                <img class="col-2 navbarAvatar d-flex align-items-center" src="{% static "img/user.jpg" %}" alt="">
-                <div class="col-6 d-flex flex-column justify-content-center align-items-center">
-                    <div class="name">Olga Voronova</div>
-                    <div class="profileHrefs">
-                        <a class="profileHrefSettings" href="{% url 'settings' %}">settings </a>
-                        <a href="{% url 'index' %}">log out </a>
-                    </div>
-                </div>
+            <div class="profile col-3 d-flex justify-content-end">
+              <div class="profileHrefs">
+                <a class="profileHrefsLogin" href="{% url 'login' %}">log in </a>
+                <a href="{% url 'signup' %}">register</a>
+              </div>
             </div>
+
+{#            <!--Для авторизированных пользователей-->#}
+{#            <div class="profile col-3 d-flex justify-content-end align-items-center">#}
+{#                <img class="col-2 navbarAvatar d-flex align-items-center" src="{% static "img/user.jpg" %}" alt="">#}
+{#                <div class="col-6 d-flex flex-column justify-content-center align-items-center">#}
+{#                    <div class="name">Olga Voronova</div>#}
+{#                    <div class="profileHrefs">#}
+{#                        <a class="profileHrefSettings" href="{% url 'settings' %}">settings </a>#}
+{#                        <a href="{% url 'index' %}">log out </a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
         </div>
     </nav>
 </header>
