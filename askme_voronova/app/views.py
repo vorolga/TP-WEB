@@ -1,24 +1,17 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
 
+from app.models import *
 
 # Create your views here.
 
+best_users = Profile.objects.best_users()
+best_tags = Tag.objects.best_tags()
 
-questions = [
-    {
-        "title": f"What is Bootstrap?",
-        "text": f"Bootstrap — свободный набор инструментов для создания сайтов и веб-приложений. Включает в себя HTML- и CSS-шаблоны оформления для типографики, веб-форм, кнопок, меток, блоков навигации и прочих компонентов веб-интерфейса, включая JavaScript-расширения.",
-        "number": i
-    } for i in range(100)
-]
-
-answers = [
-    {
-        "text": f"Bootstrap — свободный набор инструментов для создания сайтов и веб-приложений. Включает в себя HTML-и CSS-шаблоны оформления для типографики, веб-форм, кнопок, меток, блоков навигации и прочих компонентов веб-интерфейса, включая JavaScript-расширения. Bootstrap — свободный набор инструментов для создания сайтов и веб-приложений. Включает в себя HTML- и CSS-шаблоны оформления для типографики, веб-форм, кнопок, меток, блоков навигации и прочих компонентов веб-интерфейса, включая JavaScript-расширения.  Bootstrap — свободный набор инструментов для создания сайтов и веб-приложений. Включает в себя HTML- и CSS-шаблоны оформления для типографики, веб-форм, кнопок, меток, блоков навигации и прочих компонентов веб-интерфейса, включая JavaScript-расширения.",
-        "number": i
-    } for i in range(10)
-]
+context = {
+        'best_users': best_users,
+        'best_tags': best_tags,
+}
 
 
 def pagination(page_type, request, limit):
@@ -29,32 +22,51 @@ def pagination(page_type, request, limit):
 
 
 def index(request):
-    return render(request, "index.html", {'questions': pagination(questions, request, 5)})
+    questions = Question.objects.new_questions()
+    content = pagination(questions, request, 5)
+    context['questions'] = questions,
+    return render(request, "index.html", {'content': content, 'context': context})
 
 
 def hot(request):
-    return render(request, "hot.html", {'questions': pagination(questions, request, 5)})
+    questions = Question.objects.hot_questions()
+    content = pagination(questions, request, 5)
+    context['questions'] = questions,
+    return render(request, "hot.html", {'content': content, 'context': context})
 
 
 def question(request, number):
-    return render(request, "question.html", {'number': questions[number], 'answers': pagination(answers, request, 3)})
+    question = Question.objects.get(id=number)
+    answers = Answer.objects.get_answers(number)
+    content = pagination(answers, request, 5)
+    context['number'] = number
+    context['question'] = question
+    return render(request, "question.html", {'content': content, 'context': context})
 
 
 def login(request):
-    return render(request, "login.html", {})
+    return render(request, "login.html", {'context': context})
 
 
 def ask(request):
-    return render(request, "ask.html", {})
+    return render(request, "ask.html", {'context': context})
 
 
 def settings(request):
-    return render(request, "settings.html", {})
+    return render(request, "settings.html", {'context': context})
 
 
 def signup(request):
-    return render(request, "signup.html", {})
+    return render(request, "signup.html", {'context': context})
 
 
 def tag(request, name):
-    return render(request, "tag.html", {'questions': pagination(questions, request, 5)})
+    questions = Question.objects.tag_questions(name)
+    content = pagination(questions, request, 5)
+    context['name'] = name
+    context['question'] = question
+    return render(request, "tag.html", {'content': content, 'context': context})
+
+
+def error(request):
+    return render(request, "404.html", {})

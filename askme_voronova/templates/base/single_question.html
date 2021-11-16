@@ -3,23 +3,32 @@
 <div class="questionBlock">
     <div class="avatarRatingQuestions col-3">
         <img class="img-circle imgQuestionProfile" alt="Профиль пользователя" src="{% static "img/user.jpg" %}">
-        <div class="mar-btm">
-            <p>Максим</p>
+        <div class="mar-btm usernameQuestion">
+            <p>{{ question.author.user.username }}</p>
         </div>
         <div class="btn-group pad-ver">
             <a class="btn btn-sm btn-default btn-hover-success" href="#"><i class="fa fa-thumbs-up"></i></a>
-            <p class="countLikes">+5</p>
+            {% if question.rating < 0 %}
+                <p class="countLikesDis">{{ question.rating }}</p>
+            {% endif %}
+            {% if question.rating > 0 %}
+                <p class="countLikesPlus">{{ question.rating }}</p>
+            {% endif %}
+            {% if question.rating == 0 %}
+                <p class="countLikes">{{ question.rating }}</p>
+            {% endif %}
             <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i class="fa fa-thumbs-down"></i></a>
         </div>
     </div>
     <div class="questionInfo col-9">
-        <a href="{% url 'question' questions.number %}" class="questionName">{{ question.title }}</a>
-        <p class="question">{{ question.text}}</p>
+        <a href="{% url 'question' number=question.id %}" class="questionName">{{ question.title }}</a>
+        <p class="question">{{ question.text }}</p>
         <div class="footerQuestion">
-            <a href="{% url 'question' questions.number %}" class="numberAnswers">answers(4)</a>
+            <a href="{% url 'question' number=question.id %}" class="numberAnswers">answers({{ question.count_answers }})</a>
             <p class="questionTags">Tags:</p>
-            <a href="{% url 'tag' "tag_name" %}" class="questionTag">black-jack</a>
-            <a href="{% url 'tag' "tag_name" %}" class="questionTag">bender</a>
+            {% for tag in question.tags.all %}
+                <a href="{% url 'tag' name=tag %}" class="questionTag">{{ tag }}</a>
+            {% endfor %}
         </div>
     </div>
 </div>

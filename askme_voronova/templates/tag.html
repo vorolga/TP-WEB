@@ -8,15 +8,15 @@
 {% block content %}
     <div class="col-9 listQuestions">
         <div class="questionHeaders d-flex align-items-center">
-            <h2>Tag: bender</h2>
+            <h2>Tag: {{ context.name }}</h2>
         </div>
 
 
-        {% for question in questions %}
+        {% for question in content %}
             {% include "base/single_question.html" %}
         {% endfor %}
 
-        {% include "base/paginator_questions.html" %}
+        {% include "base/paginator.html" %}
     </div>
 {% endblock content %}
 

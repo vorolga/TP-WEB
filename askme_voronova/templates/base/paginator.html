@@ -1,0 +1,45 @@
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        {% if content.has_previous %}
+            <li class="page-item enabled">
+                <a class="page-link" href="?page=1" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ content.previous_page_number }}">{{ content.previous_page_number }}</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="?page=1" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {% endif %}
+
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="?page=content.number">{{ content.number }}</a>
+        </li>
+
+        {% if content.has_next %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ content.next_page_number }}">{{ content.next_page_number }}</a>
+            </li>
+
+            <li class="page-item enabled">
+                <a class="page-link" href="?page={{ content.paginator.num_pages }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="?page={{ content.paginator.num_pages }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

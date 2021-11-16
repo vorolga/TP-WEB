@@ -13,10 +13,10 @@
 
         </div>
 
-        {% for question in questions %}
+        {% for question in content %}
             {% include "base/single_question.html" %}
         {% endfor %}
 
-        {% include "base/paginator_questions.html" %}
+        {% include "base/paginator.html" %}
     </div>
 {% endblock content %}

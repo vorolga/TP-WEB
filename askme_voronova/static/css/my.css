@@ -82,21 +82,13 @@ header {
     text-decoration: none;
 }
 
-.greenTag {
-    color: green;
-    font-size: 21px;
+a {
+    color: #264b5d;
 }
 
-.redTag {
-    color: red;
-    font-size: 22px;
+a:hover {
+    color: #2c3034;
 }
-
-.orangeTag {
-    color: orange;
-    font-size: 23px;
-}
-
 
 .questionBlock {
     margin-top: 20px;
@@ -104,8 +96,7 @@ header {
     border-radius: 10px;
     padding: 15px;
     display: flex;
-    flex-direction: row;
-    align-items: start;
+    flex-direction: row
 
 }
 
@@ -113,7 +104,10 @@ header {
     width: 100px;
     height: 100px;
     border-radius: 50%;
+}
 
+.usernameQuestion{
+    margin-top: 1rem;
 }
 
 .hotQuestionsLink {
@@ -123,8 +117,28 @@ header {
 .countLikes {
     width: 30px;
     text-align: center;
+    color: #2c3034;
+    margin-bottom: 0;
+}
+
+.countLikesDis {
+    width: 30px;
+    text-align: center;
+    color: #CC3434;
+    margin-bottom: 0;
+}
+
+.countLikesPlus {
+    width: 30px;
+    text-align: center;
     color: darkgreen;
     margin-bottom: 0;
+}
+
+.questionInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .avatarRatingQuestions {
@@ -170,7 +184,6 @@ header {
     margin-bottom: 20px;
     display: flex;
     flex-direction: row;
-    align-items: start;
 }
 
 .imgOneQuestionProfile {
