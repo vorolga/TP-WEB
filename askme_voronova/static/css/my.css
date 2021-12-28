@@ -221,3 +221,7 @@ footer {
 .error {
     color: red;
 }
+
+.signInBtns {
+    margin-top: 20px;
+}

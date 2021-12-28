@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load bootstrap4 %}
 
 {% block title %}
     Login
@@ -11,21 +12,15 @@
             <h2>Log In</h2>
         </div>
         <p class="error">Sorry, wrong email</p>
-        <form class="g-3 d-flex flex-column">
-            <div class="col-6 mb-4">
-                <label for="login" class="form-label">Login</label>
-                <input type="text" class="form-control" id="login" placeholder="Login" maxlength="50" required>
+        <form novalidate class="g-3 d-flex flex-column" action="/login/" method="post">
+            {% csrf_token %}
+            <div class="col-6">
+                {% bootstrap_form form %}
             </div>
-
-            <div class="form-group col-6 mb-4">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"
-                       required>
-            </div>
-
-            <div class="col-12 mb-3">
+            <div class="col-12 mb-3 signInBtns">
                 <button onclick='location.href="{% url 'index' %}"' class="btn btn-outline-secondary" type="submit"><i class="fa fa-pencil"></i>Log In
                 </button>
+
                 <button class="btn btn-outline-secondary btnCreateNewAccount" type="button"
                         onclick='location.href="{% url 'signup' %}"'><i class="fa fa-pencil"></i>Create New Account
                 </button>
