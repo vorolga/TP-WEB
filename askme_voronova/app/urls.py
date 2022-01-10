@@ -11,6 +11,7 @@ urlpatterns = [
     path('settings/', views.settings, name='settings'),
     path('signup/', views.signup, name='signup'),
     path('tag/<str:name>', views.tag, name='tag'),
-    path('404/', views.error, name='404')
+    path('404/', views.error, name='404'),
+    path('logout/', views.logout, name="logout"),
 ]
 

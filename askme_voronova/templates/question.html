@@ -1,4 +1,5 @@
 {% extends "base/base.html" %}
+{% load bootstrap4 %}
 {% load static %}
 
 {% block title %}
@@ -10,7 +11,7 @@
         <div class="oneQuestion">
             <div class="avatarRatingQuestions col-3">
                 <img class="img-circle imgOneQuestionProfile" alt="Профиль пользователя"
-                                                    src="{% static "img/user.jpg" %}">
+                     src="{% static "img/user.jpg" %}">
                 <div class="mar-btm">
                     <p class="usernameQuestion">{{ context.question.author.user.username }}</p>
                 </div>
@@ -41,14 +42,22 @@
 
         <hr>
 
-        <div class="mb-3">
-            <label for="answer" class="form-label">Your answer:</label>
-            <textarea class="form-control" id="answer" rows="7" placeholder="Enter your answer here..."
-                      maxlength="2000"></textarea>
-            <button onclick='location.href="{% url 'question' number=context.question.id %}"' type="button"
-                    class="btnAnswer btn-outline-secondary"><i class="fa fa-pencil"></i>Answer
-            </button>
-        </div>
+        {% if request.user.is_authenticated %}
+
+            <form class="row mb-3" novalidate method="post">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+
+                <div class="col-12 mb-3 signInBtns">
+                    {% buttons %}
+                        <button
+                                type="submit" class="btnAnswer btn-outline-secondary"><i class="fa fa-pencil"></i>Answer
+                        </button>
+                    {% endbuttons %}
+                </div>
+            </form>
+
+        {% endif %}
 
         {% include "base/paginator.html" %}
     </div>

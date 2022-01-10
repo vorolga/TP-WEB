@@ -33,7 +33,7 @@
 
 <body class="d-flex flex-column h-100">
 <header>
-    <nav class="navbar navbar-expand-md fixed-top">
+    <nav class="navbar navbar-expand-md fixed-top" style="height: 64px">
         <div class="container-fluid navbarContainer">
             <a class="navbar-brand logo col-3 d-flex" href="{% url 'index' %}">AskVoronova</a>
 
@@ -47,32 +47,36 @@
                     </form>
                 </form>
 
-                <form class="btnAsk col-3 d-flex justify-content-end">
-                    <button onclick='location.href="{% url 'ask' %}"' type="button" class="btn btn-outline-secondary">
-                        Ask!
-                    </button>
-                </form>
+                {% if request.user.is_authenticated %}
+                    <form class="btnAsk col-3 d-flex justify-content-end">
+                        <button onclick='location.href="{% url 'ask' %}"' type="button"
+                                class="btn btn-outline-secondary">
+                            Ask!
+                        </button>
+                    </form>
+                {% endif %}
             </div>
 
-            <!--Для неавторизированных пользователей-->
-            <div class="profile col-3 d-flex justify-content-end">
-                <div class="profileHrefs">
-                    <a class="profileHrefsLogin" href="{% url 'login' %}">log in </a>
-                    <a href="{% url 'signup' %}">register</a>
+            {% if request.user.is_authenticated %}
+                <div class="profile col-3 d-flex justify-content-end align-items-center">
+                    <img class="col-2 navbarAvatar d-flex align-items-center" src="{% static "img/user.jpg" %}" alt="">
+                    <div class="col-6 d-flex flex-column justify-content-center align-items-center">
+                        <div class="name">{{ request.user.username }}</div>
+                        <div class="profileHrefs">
+                            <a class="profileHrefSettings" href="{% url 'settings' %}">settings </a>
+                            <a href="{% url 'logout' %}">log out </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            {% else %}
+                <div class="profile col-3 d-flex justify-content-end">
+                    <div class="profileHrefs">
+                        <a class="profileHrefsLogin" href="{% url 'login' %}">log in </a>
+                        <a href="{% url 'signup' %}">register</a>
+                    </div>
+                </div>
+            {% endif %}
 
-            {#            <!--Для авторизированных пользователей-->#}
-            {#            <div class="profile col-3 d-flex justify-content-end align-items-center">#}
-            {#                <img class="col-2 navbarAvatar d-flex align-items-center" src="{% static "img/user.jpg" %}" alt="">#}
-            {#                <div class="col-6 d-flex flex-column justify-content-center align-items-center">#}
-            {#                    <div class="name">Olga Voronova</div>#}
-            {#                    <div class="profileHrefs">#}
-            {#                        <a class="profileHrefSettings" href="{% url 'settings' %}">settings </a>#}
-            {#                        <a href="{% url 'index' %}">log out </a>#}
-            {#                    </div>#}
-            {#                </div>#}
-            {#            </div>#}
         </div>
     </nav>
 </header>

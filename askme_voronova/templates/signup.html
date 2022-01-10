@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load bootstrap4 %}
 
 {% block title %}
     Registration
@@ -10,39 +11,15 @@
         <div class="questionHeaders d-flex align-items-center">
             <h2>Registration</h2>
         </div>
-        <p class="error">Sorry, this email address already registred </p>
-        <form class="g-3 d-flex flex-column">
-            <div class="col-6 mb-4">
-                <label for="login" class="form-label">Login</label>
-                <input type="text" class="form-control" id="login" placeholder="Login" maxlength="50" required>
+        <form novalidate class="g-3 d-flex flex-column" method="post">
+            {% csrf_token %}
+            <div class="col-6">
+                {% bootstrap_form form %}
             </div>
-            <div class="col-6 mb-4">
-                <label for="email" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="email" placeholder="Email" maxlength="50"
-                       aria-describedby="emailHelp" required>
-            </div>
-            <div class="col-6 mb-4">
-                <label for="nickname" class="form-label">NickName</label>
-                <input type="text" class="form-control" id="nickname" maxlength="50" placeholder="NickName" required>
-            </div>
-
-            <div class="form-group col-6 mb-4">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" required>
-            </div>
-
-            <div class="form-group col-6 mb-4">
-                <label for="repeatPassword" class="form-label">Repeat Password</label>
-                <input type="password" class="form-control" id="repeatPassword" placeholder="Password" required>
-            </div>
-
-            <div class="col-6 mb-4">
-                <label for="uploadAvatar" class="form-label">Upload Avatar</label>
-                <input type="file" class="form-control" id="uploadAvatar" accept="image/jpeg" aria-label="file example"
-                       required>
-            </div>
-            <div class="col-12 mb-3">
-                <button onclick='location.href="{% url 'index' %}"' class="btn btn-outline-secondary" type="submit"><i class="fa fa-pencil"></i>Register</button>
+            <div class="col-12 mb-3 signInBtns">
+                {% buttons %}
+                    <button onclick='location.href="{% url 'index' %}"' class="btn btn-outline-secondary" type="submit"><i class="fa fa-pencil"></i>Register</button>
+                {% endbuttons %}
             </div>
         </form>
     </div>

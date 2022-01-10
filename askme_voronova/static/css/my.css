@@ -1,5 +1,5 @@
 main > .container {
-  padding: 60px 15px 0;
+    padding: 60px 15px 0;
 }
 
 main {
@@ -7,19 +7,19 @@ main {
 }
 
 .avatar {
-  width: 100px;
-  height: 100px;
-  padding: 5px;
-  margin: 10px;
-  border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    padding: 5px;
+    margin: 10px;
+    border-radius: 50%;
 }
 
 .navbar {
-  background-color: aliceblue;
+    background-color: aliceblue;
 }
 
 header {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 /*.navbarContainer {*/
@@ -27,39 +27,39 @@ header {
 /*}*/
 
 .logo {
-  color: #343a40;
-  padding-left: 50px;
+    color: #343a40;
+    padding-left: 50px;
 }
 
 .logo:hover {
-  color: #343a40;
+    color: #343a40;
 }
 
 .profileHrefs {
-  display: flex;
+    display: flex;
 }
 
 .profileHrefs a {
-  color: #343a40;
+    color: #343a40;
 }
 
 .navbarAvatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 5px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 5px;
 }
 
 .profileHrefSettings {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 
 .profile {
-  padding-right: 50px;
+    padding-right: 50px;
 }
 
 .profileHrefsLogin {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 
 .rightColumn {
@@ -68,12 +68,12 @@ header {
 }
 
 .popularTags {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .member {
-  margin-bottom: 5px;
-  font-size: 20px;
+    margin-bottom: 5px;
+    font-size: 20px;
 }
 
 .tag {
@@ -106,7 +106,7 @@ a:hover {
     border-radius: 50%;
 }
 
-.usernameQuestion{
+.usernameQuestion {
     margin-top: 1rem;
 }
 
@@ -153,7 +153,11 @@ a:hover {
 }
 
 .question {
-  margin-top: 15px;
+    margin-top: 15px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
 .numberAnswers {
@@ -190,10 +194,6 @@ a:hover {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-}
-
-.btnAnswer {
-    margin-top: 10px;
 }
 
 .askQuestion {

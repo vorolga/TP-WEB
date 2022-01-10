@@ -1,5 +1,7 @@
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
@@ -9,6 +11,7 @@ from app.forms import *
 # Create your views here.
 
 context = {}
+
 
 def definition(context):
     best_users = Profile.objects.best_users()
@@ -42,18 +45,34 @@ def hot(request):
 
 def question(request, number):
     definition(context)
+    global form
     question = Question.objects.get(id=number)
-    answers = Answer.objects.get_answers(number)
-    content = pagination(answers, request, 5)
     context['number'] = number
     context['question'] = question
-    return render(request, "question.html", {'content': content, 'context': context})
+    if request.method == "GET":
+        form = AnswerForm()
+
+    if request.method == "POST":
+        form = AnswerForm(data=request.POST)
+        user = request.user.id
+        profile = Profile.objects.get(user_id=user)
+        if form.is_valid():
+            answer = Answer.objects.create(question_id=number,
+                                           author=profile,
+                                           text=form.cleaned_data["text"])
+            answers = Answer.objects.get_answers(number)
+            content = pagination(answers, request, 5)
+            return redirect(reverse("question", kwargs={"number": number}) + "?page="
+                            + str(content.paginator.num_pages) + f"#{answer.id}")
+
+    answers = Answer.objects.get_answers(number)
+    content = pagination(answers, request, 5)
+    return render(request, "question.html", {'content': content, 'context': context, 'form': form})
 
 
 def login(request):
     global form
     definition(context)
-    print(request.POST)
     if request.method == 'GET':
         form = LoginForm()
     if request.method == 'POST':
@@ -68,19 +87,77 @@ def login(request):
     return render(request, "login.html", {'context': context, 'form': form})
 
 
+@login_required
 def ask(request):
+    global form
     definition(context)
-    return render(request, "ask.html", {'context': context})
+    if request.method == "GET":
+        form = AskForm()
+    if request.method == "POST":
+        form = AskForm(data=request.POST)
+        if form.is_valid():
+            tags = form.save()
+            user = request.user.id
+            profile = Profile.objects.get(user_id=user)
+            question = Question.objects.create(author=profile,
+                                               title=form.cleaned_data["title"],
+                                               text=form.cleaned_data["text"])
+            for tag in tags:
+                question.tags.add(tag)
+                question.save()
+            return redirect("question", question.id)
+    return render(request, "ask.html", {'context': context, 'form': form})
 
 
+@login_required
 def settings(request):
+    global form
     definition(context)
-    return render(request, "settings.html", {'context': context})
+    if request.method == 'GET':
+        form = SettingsForm(data={"username": request.user.username, "email": request.user.email})
+    if request.method == 'POST':
+        form = SettingsForm(data=request.POST)
+        if form.is_valid():
+            user = request.user
+            if form.cleaned_data["old_password"] != "":
+                if not user.check_password(form.cleaned_data["old_password"]):
+                    form.add_error(None, "Old password is wrong!")
+                if form.cleaned_data["password"] != form.cleaned_data["password_repeat"] or form.cleaned_data[
+                    "password"] == "":
+                    form.add_error(None, "New passwords do not match!")
+                user.set_password(form.cleaned_data["password"])
+                user.save()
+                auth.login(request, user)
+            else:
+                if form.cleaned_data["password"] != "" or form.cleaned_data["password_repeat"] != "":
+                    form.add_error(None, "You must write old password!")
+
+            if form.cleaned_data["username"] != user.username and form.cleaned_data["username"] != "":
+                user.username = form.cleaned_data["username"]
+                user.save()
+                auth.login(request, user)
+                Profile.objects.filter(user=user).update(login=user.username)
+            if form.cleaned_data["email"] != user.email and form.cleaned_data["email"] != "":
+                user.email = form.cleaned_data["email"]
+                user.save()
+                auth.login(request, user)
+    return render(request, "settings.html", {'context': context, 'form': form})
 
 
 def signup(request):
+    global form
     definition(context)
-    return render(request, "signup.html", {'context': context})
+    if request.method == "GET":
+        form = SignUpForm()
+
+    if request.method == "POST":
+        form = SignUpForm(data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            if user is not None:
+                auth.login(request, user)
+                return redirect("index")
+    return render(request, "signup.html", {'context': context, 'form': form})
 
 
 def tag(request, name):
@@ -95,3 +172,9 @@ def tag(request, name):
 def error(request):
     definition(context)
     return render(request, "404.html", {})
+
+
+@login_required
+def logout(request):
+    auth.logout(request)
+    return redirect("index")

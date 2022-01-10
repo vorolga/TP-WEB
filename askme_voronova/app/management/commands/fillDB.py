@@ -48,7 +48,7 @@ class Command(BaseCommand):
 
         User.objects.bulk_create(users)
 
-        profile = [Profile(user_id=i, login=f"login{i}") for i in range(0, profile_count)]
+        profile = [Profile(user_id=i, login=users[i].username) for i in range(0, profile_count)]
 
         Profile.objects.bulk_create(profile)
         print("end fill profiles")
