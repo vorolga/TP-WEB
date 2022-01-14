@@ -2,22 +2,36 @@
 
 <div class="questionBlock">
     <div class="avatarRatingQuestions col-3">
-        <img class="img-circle imgQuestionProfile" alt="Профиль пользователя" src="{% static "img/user.jpg" %}">
-        <div class="mar-btm usernameQuestion">
-            <p>{{ question.author.user.username }}</p>
+        <div class="avatarName">
+            <img class="img-circle imgQuestionProfile" alt="Профиль пользователя"
+                 src="{{ question.author.user.profile.avatar.url }}">
+            <div class="mar-btm usernameQuestion">
+                <p>{{ question.author.user.username }}</p>
+            </div>
         </div>
         <div class="btn-group pad-ver">
-            <a class="btn btn-sm btn-default btn-hover-success" href="#"><i class="fa fa-thumbs-up"></i></a>
+            <a class="btn btn-sm btn-default btn-hover-success vote" data-id="{{ question.id }}"
+               data-action=1 data-model="question" id="vote-up-q{{ question.id }}"
+                    {% if question.id in context.question_liked %}
+               style="color: #0a53be"
+                    {% endif %}
+            ><i class="fa fa-thumbs-up"></i></a>
             {% if question.rating < 0 %}
-                <p class="countLikesDis">{{ question.rating }}</p>
+                <p class="countLikesDis" id="question{{ question.id }}">{{ question.rating }}</p>
             {% endif %}
             {% if question.rating > 0 %}
-                <p class="countLikesPlus">{{ question.rating }}</p>
+                <p class="countLikesPlus" id="question{{ question.id }}">{{ question.rating }}</p>
             {% endif %}
             {% if question.rating == 0 %}
-                <p class="countLikes">{{ question.rating }}</p>
+                <p class="countLikes" id="question{{ question.id }}">{{ question.rating }}</p>
             {% endif %}
-            <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i class="fa fa-thumbs-down"></i></a>
+            <a class="btn btn-sm btn-default btn-hover-danger vote" data-id="{{ question.id }}"
+                       data-action=-1 data-model="question" id="vote-down-q{{ question.id }}"
+                            {% if question.id in context.question_disliked %}
+                       style="color: #0a53be"
+                            {% endif %}
+                    ><i
+                            class="fa fa-thumbs-down"></i></a>
         </div>
     </div>
     <div class="questionInfo col-9">

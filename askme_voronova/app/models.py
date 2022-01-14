@@ -5,13 +5,51 @@ from django.db.models import UniqueConstraint, Count
 
 class AnswerManager(models.Manager):
     def best_users_count_correct(self):
-        return self.values('author_id').filter(is_correct=1).annotate(count_correct=Count('is_correct')).order_by('-count_correct')[:7]
+        return self.values('author_id').filter(is_correct=1).annotate(count_correct=Count('is_correct')).order_by(
+            '-count_correct')[:7]
 
     def get_answers(self, question):
         return self.filter(question_id=question)
 
     def get_count_answers(self, question):
         return self.filter(question_id=question).count()
+
+    def change_rating(self, answer_id, action, user):
+        try:
+            a = self.get(id=answer_id)
+        except self.DoesNotExist:
+            a = None
+        if a is not None:
+            ar = AnswerRating.objects.filter(answer=a, user=user)
+            if ar.count() == 0:
+                a.rating += int(action)
+                a.save()
+                AnswerRating.objects.create(user=user, mark=action, answer=a)
+            else:
+                if ar[0].mark == int(action):
+                    a.rating -= int(action)
+                    a.save()
+                    ar.delete()
+                else:
+                    a.rating += (2 * int(action))
+                    a.save()
+                    ar.delete()
+                    AnswerRating.objects.create(user=user, mark=action, answer=a)
+
+    def change_correct(self, answer_id, user_id):
+        try:
+            a = self.get(id=answer_id)
+        except self.DoesNotExist:
+            a = None
+        if a is not None:
+            if a.question.author.id == user_id:
+                if a.is_correct:
+                    a.is_correct = False
+                    a.save()
+                else:
+                    a.is_correct = True
+                    a.save()
+
 
 
 class ProfileManager(models.Manager):
@@ -25,7 +63,8 @@ class ProfileManager(models.Manager):
 
 class TagManager(models.Manager):
     def best_tags(self):
-        best_tags_count = Question.tags.through.objects.values('tag_id').annotate(count_questions=Count('question_id')).order_by('-count_questions')[:7]
+        best_tags_count = Question.tags.through.objects.values('tag_id').annotate(
+            count_questions=Count('question_id')).order_by('-count_questions')[:7]
         best_tags_list = []
         for i in range(len(best_tags_count)):
             best_tags_list.append(self.get(id=best_tags_count[i]['tag_id']))
@@ -43,10 +82,35 @@ class QuestionManager(models.Manager):
         tag = Tag.objects.get(tag_name=tag_questions)
         return self.filter(tags=tag)
 
+    def change_rating(self, question_id, action, user):
+        try:
+            q = self.get(id=question_id)
+        except self.DoesNotExist:
+            q = None
+        if q is not None:
+            qr = QuestionRating.objects.filter(question=q, user=user)
+            if qr.count() == 0:
+                q.rating += int(action)
+                q.save()
+                QuestionRating.objects.create(user=user, mark=action, question=q)
+            else:
+                if qr[0].mark == int(action):
+                    q.rating -= int(action)
+                    q.save()
+                    qr.delete()
+                else:
+                    q.rating += (2 * int(action))
+                    q.save()
+                    qr.delete()
+                    QuestionRating.objects.create(user=user, mark=action, question=q)
+
+
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     login = models.CharField(max_length=50)
+    avatar = models.ImageField(upload_to="avatars/%Y/%m/%d/", default='user.jpg')
 
     objects = ProfileManager()
 

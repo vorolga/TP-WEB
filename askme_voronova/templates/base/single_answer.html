@@ -2,23 +2,35 @@
 
 <div class="questionBlock" id="{{ answer.id }}">
     <div class="avatarRatingQuestions col-3">
-        <img class="img-circle imgQuestionProfile" alt="Профиль пользователя"
-             src="{% static "img/user.jpg" %}">
-        <div class="mar-btm usernameQuestion">
-            <p>{{ answer.author.user.username }}</p>
+        <div class="avatarName">
+            <img class="img-circle imgQuestionProfile" alt="Профиль пользователя"
+                 src="{{ answer.author.user.profile.avatar.url }}">
+            <div class="mar-btm usernameQuestion">
+                <p>{{ answer.author.user.username }}</p>
+            </div>
         </div>
         <div class="btn-group pad-ver">
-            <a class="btn btn-sm btn-default btn-hover-success" href="#"><i class="fa fa-thumbs-up"></i></a>
+            <a class="btn btn-sm btn-default btn-hover-success vote" data-id="{{ answer.id }}"
+               data-action=1 data-model="answer" id="vote-up-a{{ answer.id }}"
+                    {% if answer.id in context.answer_liked %}
+               style="color: #0a53be"
+                    {% endif %}
+            ><i class="fa fa-thumbs-up"></i></a>
             {% if answer.rating < 0 %}
-                <p class="countLikesDis">{{ answer.rating }}</p>
+                <p class="countLikesDis" id="answer{{ answer.id }}">{{ answer.rating }}</p>
             {% endif %}
             {% if answer.rating > 0 %}
-                <p class="countLikesPlus">{{ answer.rating }}</p>
+                <p class="countLikesPlus" id="answer{{ answer.id }}">{{ answer.rating }}</p>
             {% endif %}
             {% if answer.rating == 0 %}
-                <p class="countLikes">{{ answer.rating }}</p>
+                <p class="countLikes" id="answer{{ answer.id }}">{{ answer.rating }}</p>
             {% endif %}
-            <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i class="fa fa-thumbs-down"></i></a>
+            <a class="btn btn-sm btn-default btn-hover-danger vote" data-id="{{ answer.id }}"
+               data-action=-1 data-model="answer" id="vote-down-a{{ answer.id }}"
+                    {% if answer.id in context.answer_disliked %}
+               style="color: #0a53be"
+                    {% endif %}
+            ><i class="fa fa-thumbs-down"></i></a>
         </div>
     </div>
     <div class="questionInfo col-9">
@@ -28,9 +40,12 @@
         <div class="footerQuestion">
             <div class="form-check form-check-inline">
                 {% if answer.is_correct %}
-                    <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineCheckbox" checked="checked">
+                    <input class="form-check-input correct" type="checkbox" name="inlineRadioOptions" id="correct{{ answer.id }}"
+                       data-id="{{ answer.id }}"
+                           checked="checked">
                 {% else %}
-                    <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineCheckbox">
+                    <input class="form-check-input correct" type="checkbox" name="inlineRadioOptions" id="correct{{ answer.id }}"
+                       data-id="{{ answer.id }}">
                 {% endif %}
 
                 <label class="form-check-label" for="inlineCheckbox">Correct</label>

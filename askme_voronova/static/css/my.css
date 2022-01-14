@@ -148,6 +148,13 @@ a:hover {
     align-items: center;
 }
 
+.avatarName {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .questionName {
     font-size: 25px;
 }

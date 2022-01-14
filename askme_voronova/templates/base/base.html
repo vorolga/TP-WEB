@@ -59,7 +59,8 @@
 
             {% if request.user.is_authenticated %}
                 <div class="profile col-3 d-flex justify-content-end align-items-center">
-                    <img class="col-2 navbarAvatar d-flex align-items-center" src="{% static "img/user.jpg" %}" alt="">
+                    <img class="col-2 navbarAvatar d-flex align-items-center"
+                         src="{{ request.user.profile.avatar.url }}" alt="">
                     <div class="col-6 d-flex flex-column justify-content-center align-items-center">
                         <div class="name">{{ request.user.username }}</div>
                         <div class="profileHrefs">
@@ -115,6 +116,11 @@
     </div>
 </footer>
 
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/csrf.js' %}"></script>
+
+{% block jscode %}
+{% endblock %}
 
 </body>
 </html>

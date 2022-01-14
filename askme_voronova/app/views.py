@@ -1,9 +1,10 @@
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 
 from app.models import *
 from app.forms import *
@@ -31,7 +32,21 @@ def index(request):
     definition(context)
     questions = Question.objects.new_questions()
     content = pagination(questions, request, 5)
-    context['questions'] = questions,
+    context['questions'] = questions
+    profile = None
+
+    if request.user.is_authenticated:
+        try:
+            profile = Profile.objects.get(user=request.user)
+        except Profile.DoesNotExist:
+            profile = None
+
+    if profile is not None:
+        context['question_liked'] = list(
+            QuestionRating.objects.values_list('question_id', flat=True).filter(user=request.user.profile, mark=1))
+        context['question_disliked'] = list(
+            QuestionRating.objects.values_list('question_id', flat=True).filter(user=request.user.profile, mark=-1))
+
     return render(request, "index.html", {'content': content, 'context': context})
 
 
@@ -39,7 +54,21 @@ def hot(request):
     definition(context)
     questions = Question.objects.hot_questions()
     content = pagination(questions, request, 5)
-    context['questions'] = questions,
+    context['questions'] = questions
+    profile = None
+
+    if request.user.is_authenticated:
+        try:
+            profile = Profile.objects.get(user=request.user)
+        except Profile.DoesNotExist:
+            profile = None
+
+    if profile is not None:
+        context['question_liked'] = list(
+            QuestionRating.objects.values_list('question_id', flat=True).filter(user=request.user.profile, mark=1))
+        context['question_disliked'] = list(
+            QuestionRating.objects.values_list('question_id', flat=True).filter(user=request.user.profile, mark=-1))
+
     return render(request, "hot.html", {'content': content, 'context': context})
 
 
@@ -49,13 +78,20 @@ def question(request, number):
     question = Question.objects.get(id=number)
     context['number'] = number
     context['question'] = question
+
+    profile = None
+
+    if request.user.is_authenticated:
+        try:
+            profile = Profile.objects.get(user=request.user)
+        except Profile.DoesNotExist:
+            profile = None
+
     if request.method == "GET":
         form = AnswerForm()
 
     if request.method == "POST":
         form = AnswerForm(data=request.POST)
-        user = request.user.id
-        profile = Profile.objects.get(user_id=user)
         if form.is_valid():
             answer = Answer.objects.create(question_id=number,
                                            author=profile,
@@ -66,6 +102,21 @@ def question(request, number):
                             + str(content.paginator.num_pages) + f"#{answer.id}")
 
     answers = Answer.objects.get_answers(number)
+
+    if profile is not None:
+        context['question_liked'] = QuestionRating.objects.filter(question=question, user=request.user.profile,
+                                                                  mark=1).count()
+        context['question_disliked'] = QuestionRating.objects.filter(question=question, user=request.user.profile,
+                                                                     mark=-1).count()
+
+        context['answer_liked'] = []
+        context['answer_disliked'] = []
+        for answer in answers:
+            if AnswerRating.objects.filter(answer=answer, user=request.user.profile, mark=1).count():
+                context['answer_liked'].append(answer.id)
+            if AnswerRating.objects.filter(answer=answer, user=request.user.profile, mark=-1).count():
+                context['answer_disliked'].append(answer.id)
+
     content = pagination(answers, request, 5)
     return render(request, "question.html", {'content': content, 'context': context, 'form': form})
 
@@ -116,7 +167,7 @@ def settings(request):
     if request.method == 'GET':
         form = SettingsForm(data={"username": request.user.username, "email": request.user.email})
     if request.method == 'POST':
-        form = SettingsForm(data=request.POST)
+        form = SettingsForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             user = request.user
             if form.cleaned_data["old_password"] != "":
@@ -133,6 +184,10 @@ def settings(request):
                     form.add_error(None, "You must write old password!")
 
             if form.cleaned_data["username"] != user.username and form.cleaned_data["username"] != "":
+                p = list(User.objects.values_list("username", flat=True))
+                username = form.cleaned_data["username"]
+                if username in p:
+                    form.add_error(None, "This username is already used!")
                 user.username = form.cleaned_data["username"]
                 user.save()
                 auth.login(request, user)
@@ -141,6 +196,9 @@ def settings(request):
                 user.email = form.cleaned_data["email"]
                 user.save()
                 auth.login(request, user)
+            if form.files.get("avatar"):
+                user.profile.avatar = form.files.get("avatar")
+                user.profile.save()
     return render(request, "settings.html", {'context': context, 'form': form})
 
 
@@ -151,10 +209,13 @@ def signup(request):
         form = SignUpForm()
 
     if request.method == "POST":
-        form = SignUpForm(data=request.POST)
+        form = SignUpForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             user = form.save()
             if user is not None:
+                if form.files.get("avatar"):
+                    user.profile.avatar = form.files.get("avatar")
+                    user.profile.save()
                 auth.login(request, user)
                 return redirect("index")
     return render(request, "signup.html", {'context': context, 'form': form})
@@ -178,3 +239,27 @@ def error(request):
 def logout(request):
     auth.logout(request)
     return redirect("index")
+
+
+@login_required
+@require_POST
+def vote(request):
+    id = request.POST['id']
+    action = request.POST['action']
+    model = request.POST['model']
+
+    if model == "question":
+        Question.objects.change_rating(id, action, request.user.profile)
+        return JsonResponse({'rating': Question.objects.get(id=id).rating})
+
+    if model == "answer":
+        Answer.objects.change_rating(id, action, request.user.profile)
+        return JsonResponse({'rating': Answer.objects.get(id=id).rating})
+
+
+@login_required
+@require_POST
+def correct(request):
+    answer_id = request.POST['id']
+    Answer.objects.change_correct(answer_id, request.user.profile.id)
+    return JsonResponse({'correct': Answer.objects.get(id=answer_id).is_correct})

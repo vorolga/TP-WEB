@@ -11,7 +11,7 @@
         <div class="questionHeaders d-flex align-items-center">
             <h2>Registration</h2>
         </div>
-        <form novalidate class="g-3 d-flex flex-column" method="post">
+        <form novalidate class="g-3 d-flex flex-column" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="col-6">
                 {% bootstrap_form form %}

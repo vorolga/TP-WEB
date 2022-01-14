@@ -8,23 +8,46 @@
 
 {% block content %}
     <div class="col-9">
-        <div class="oneQuestion">
+        <div class="oneQuestion" id="">
             <div class="avatarRatingQuestions col-3">
-                <img class="img-circle imgOneQuestionProfile" alt="Профиль пользователя"
-                     src="{% static "img/user.jpg" %}">
-                <div class="mar-btm">
-                    <p class="usernameQuestion">{{ context.question.author.user.username }}</p>
+                <div class="avatarName">
+                    <img class="img-circle imgOneQuestionProfile" alt="Профиль пользователя"
+                         src="{{ context.question.author.user.profile.avatar.url }}">
+                    <div class="mar-btm">
+                        <p class="usernameQuestion">{{ context.question.author.user.username }}</p>
+                    </div>
                 </div>
                 <div class="btn-group pad-ver">
-                    <a class="btn btn-sm btn-default btn-hover-success" href="#"><i class="fa fa-thumbs-up"></i></a>
-                    <p class="countLikes">{{ context.question.rating }}</p>
-                    <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i class="fa fa-thumbs-down"></i></a>
+                    <a class="btn btn-sm btn-default btn-hover-success vote" data-id="{{ context.question.id }}"
+                       data-action=1 data-model="question" id="vote-up-q{{ context.question.id }}"
+                            {% if context.question_liked == 1 %}
+                       style="color: #0a53be"
+                            {% endif %}
+                    ><i class="fa fa-thumbs-up"></i></a>
+                    {% if context.question.rating < 0 %}
+                        <p class="countLikesDis"
+                           id="question{{ context.question.id }}">{{ context.question.rating }}</p>
+                    {% endif %}
+                    {% if context.question.rating > 0 %}
+                        <p class="countLikesPlus"
+                           id="question{{ context.question.id }}">{{ context.question.rating }}</p>
+                    {% endif %}
+                    {% if context.question.rating == 0 %}
+                        <p class="countLikes" id="question{{ context.question.id }}">{{ context.question.rating }}</p>
+                    {% endif %}
+                    <a class="btn btn-sm btn-default btn-hover-danger vote" data-id="{{ context.question.id }}"
+                       data-action=-1 data-model="question" id="vote-down-q{{ context.question.id }}"
+                            {% if context.question_disliked %}
+                       style="color: #0a53be"
+                            {% endif %}
+                    ><i
+                            class="fa fa-thumbs-down"></i></a>
                 </div>
             </div>
             <div class="questionInfo col-9">
                 <div>
                     <p class="questionName">{{ context.question.title }}</p>
-                    <p class="question">{{ context.question.text }}</p>
+                    <p class="">{{ context.question.text }}</p>
                 </div>
                 <div class="footerQuestion">
                     <p class="questionTags">Tags:</p>
@@ -62,4 +85,9 @@
         {% include "base/paginator.html" %}
     </div>
 {% endblock content %}
+
+{% block jscode %}
+    <script src="{% static 'js/vote.js' %}"></script>
+    <script src="{% static 'js/correct.js' %}"></script>
+{% endblock jscode %}
 

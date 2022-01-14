@@ -1,13 +1,5 @@
 from django import forms
 from .models import *
-from django.core import validators
-from django.forms import CharField
-
-
-# class SlugField(CharField):
-#     def validate(self, value):
-#         value = super().validate()
-#         if value ==
 
 
 class LoginForm(forms.Form):
@@ -63,14 +55,13 @@ class SettingsForm(forms.Form):
                                                                              "placeholder": "dr_pepper"}))
     email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={"class": "form-control mb-3",
                                                                             "placeholder": "dr.pepper@mail.ru"}))
-    avatar = forms.ImageField(required=False, widget=forms.FileInput(attrs={"class": "form-control mb-3"}))
-
     old_password = forms.CharField(required=False, widget=forms.PasswordInput(attrs={"class": "form-control mb-3",
                                                                                      "placeholder": "Enter your old password"}))
     password = forms.CharField(required=False, widget=forms.PasswordInput(attrs={"class": "form-control mb-3",
                                                                                  "placeholder": "Enter your new password"}))
     password_repeat = forms.CharField(required=False, widget=forms.PasswordInput(attrs={"class": "form-control mb-3",
                                                                                         "placeholder": "Enter your new password again"}))
+    avatar = forms.ImageField(required=False, widget=forms.FileInput(attrs={"class": "form-control mb-3"}))
 
 
 class AskForm(forms.Form):
@@ -88,7 +79,7 @@ class AskForm(forms.Form):
         tag_list = []
         for tag in tags:
             t = Tag.objects.filter(tag_name=tag).first()
-            if t == 0:
+            if not t:
                 t = Tag.objects.create(tag_name=tag)
             tag_list.append(t)
         return tag_list

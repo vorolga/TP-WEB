@@ -12,11 +12,12 @@
             <h2>Settings: {{ request.user.username }}</h2>
         </div>
 
-        <form novalidate class="g-3 d-flex flex-column" method="post">
+        <form novalidate class="g-3 d-flex flex-column" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="col-6">
                 {% bootstrap_form form %}
             </div>
+            <img class="col-3" src="{{ request.user.profile.avatar.url }}" alt="">
             <div class="col-12 mb-3 signInBtns">
                 {% buttons %}
                     <button onclick='location.href="{% url 'index' %}"' class="btn btn-outline-secondary" type="submit">
