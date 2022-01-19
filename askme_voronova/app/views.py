@@ -1,6 +1,10 @@
+import jwt
+from cent import Client
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from django.core.paginator import Paginator
+from django.forms import model_to_dict
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -8,17 +12,26 @@ from django.views.decorators.http import require_POST
 
 from app.models import *
 from app.forms import *
+from askme.settings import CENTRIFUGO_SECRET_KEY, CENTRIFUGO_API_KEY
 
 # Create your views here.
 
 context = {}
 
+cl = Client("http://127.0.0.1:8000/api", api_key=CENTRIFUGO_API_KEY, timeout=1)
 
-def definition(context):
-    best_users = Profile.objects.best_users()
-    best_tags = Tag.objects.best_tags()
-    context['best_tags'] = best_tags
-    context['best_users'] = best_users
+
+def context_processor(request):
+    context["best_users"] = cache.get('best_users')
+    context["best_tags"] = cache.get('best_tags')
+    return context
+
+
+# def definition(context):
+#     best_users = Profile.objects.best_users()
+#     best_tags = Tag.objects.best_tags()
+#     context['best_tags'] = best_tags
+#     context['best_users'] = best_users
 
 
 def pagination(page_type, request, limit):
@@ -29,7 +42,7 @@ def pagination(page_type, request, limit):
 
 
 def index(request):
-    definition(context)
+    # definition(context)
     questions = Question.objects.new_questions()
     content = pagination(questions, request, 5)
     context['questions'] = questions
@@ -51,7 +64,7 @@ def index(request):
 
 
 def hot(request):
-    definition(context)
+    # definition(context)
     questions = Question.objects.hot_questions()
     content = pagination(questions, request, 5)
     context['questions'] = questions
@@ -73,15 +86,18 @@ def hot(request):
 
 
 def question(request, number):
-    definition(context)
+    # definition(context)
     global form
     question = Question.objects.get(id=number)
     context['number'] = number
     context['question'] = question
+    context['new_answer'] = ""
 
     profile = None
 
     if request.user.is_authenticated:
+        context['cent_token'] = jwt.encode({"sub": str(request.user.id)}, CENTRIFUGO_SECRET_KEY)
+        context['cent_chan'] = f"question_{question.id}"
         try:
             profile = Profile.objects.get(user=request.user)
         except Profile.DoesNotExist:
@@ -97,7 +113,9 @@ def question(request, number):
                                            author=profile,
                                            text=form.cleaned_data["text"])
             answers = Answer.objects.get_answers(number)
+            context['new_answer'] = answer
             content = pagination(answers, request, 5)
+            cl.publish(f"question_{question.id}", {"answer": model_to_dict(answer)})
             return redirect(reverse("question", kwargs={"number": number}) + "?page="
                             + str(content.paginator.num_pages) + f"#{answer.id}")
 
@@ -109,6 +127,7 @@ def question(request, number):
         context['question_disliked'] = QuestionRating.objects.filter(question=question, user=request.user.profile,
                                                                      mark=-1).count()
 
+        context['user'] = request.user.profile
         context['answer_liked'] = []
         context['answer_disliked'] = []
         for answer in answers:
@@ -123,7 +142,7 @@ def question(request, number):
 
 def login(request):
     global form
-    definition(context)
+    # definition(context)
     if request.method == 'GET':
         form = LoginForm()
     if request.method == 'POST':
@@ -141,7 +160,7 @@ def login(request):
 @login_required
 def ask(request):
     global form
-    definition(context)
+    # definition(context)
     if request.method == "GET":
         form = AskForm()
     if request.method == "POST":
@@ -163,7 +182,7 @@ def ask(request):
 @login_required
 def settings(request):
     global form
-    definition(context)
+    # definition(context)
     if request.method == 'GET':
         form = SettingsForm(data={"username": request.user.username, "email": request.user.email})
     if request.method == 'POST':
@@ -204,7 +223,7 @@ def settings(request):
 
 def signup(request):
     global form
-    definition(context)
+    # definition(context)
     if request.method == "GET":
         form = SignUpForm()
 
@@ -222,7 +241,7 @@ def signup(request):
 
 
 def tag(request, name):
-    definition(context)
+    # definition(context)
     questions = Question.objects.tag_questions(name)
     content = pagination(questions, request, 5)
     context['name'] = name
@@ -231,7 +250,7 @@ def tag(request, name):
 
 
 def error(request):
-    definition(context)
+    # definition(context)
     return render(request, "404.html", {})
 
 

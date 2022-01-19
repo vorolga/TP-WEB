@@ -63,6 +63,12 @@
             {% include "base/single_answer.html" %}
         {% endfor %}
 
+        <div id="new_answer" style="visibility: hidden; height: 0">
+            {% if content.number == content.paginator.num_pages and context.new_answer == ""%}
+                    {% include "base/single_answer.html" %}
+            {% endif %}
+        </div>
+
         <hr>
 
         {% if request.user.is_authenticated %}
@@ -89,5 +95,22 @@
 {% block jscode %}
     <script src="{% static 'js/vote.js' %}"></script>
     <script src="{% static 'js/correct.js' %}"></script>
+    <script>
+        var centrifuge = new Centrifuge('ws://127.0.0.1:8000/connection/websocket');
+
+        centrifuge.setToken("{{ context.cent_token }}");
+
+        centrifuge.subscribe("{{ context.cent_chan }}", function (message) {
+            document.getElementById("new_answer").style.visibility = "visible";
+            document.getElementById("new_answer").style.height = "auto";
+            document.getElementById("img_answer").src = "../../uploads/user.jpg";
+            document.getElementById("name_answer").innerHTML = message.data.answer.author;
+            document.getElementById("answer").innerHTML = "0";
+            document.getElementById("answer_text").innerHTML = message.data.answer.text;
+            console.log(message.data.answer);
+        });
+
+        centrifuge.connect();
+    </script>
 {% endblock jscode %}
 

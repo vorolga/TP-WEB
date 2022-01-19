@@ -1,0 +1,1 @@
+0 0 * * * source /Users/vorolga/TP-WEB/askme_voronova/venv/bin/activate && python /Users/vorolga/TP-WEB/askme_voronova/manage.py calculate_cache

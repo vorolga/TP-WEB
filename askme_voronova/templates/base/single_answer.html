@@ -3,9 +3,9 @@
 <div class="questionBlock" id="{{ answer.id }}">
     <div class="avatarRatingQuestions col-3">
         <div class="avatarName">
-            <img class="img-circle imgQuestionProfile" alt="Профиль пользователя"
+            <img class="img-circle imgQuestionProfile" id="img_answer{{ answer.id }}" alt="Профиль пользователя"
                  src="{{ answer.author.user.profile.avatar.url }}">
-            <div class="mar-btm usernameQuestion">
+            <div class="mar-btm usernameQuestion" id="name_answer{{ answer.id }}">
                 <p>{{ answer.author.user.username }}</p>
             </div>
         </div>
@@ -21,8 +21,7 @@
             {% endif %}
             {% if answer.rating > 0 %}
                 <p class="countLikesPlus" id="answer{{ answer.id }}">{{ answer.rating }}</p>
-            {% endif %}
-            {% if answer.rating == 0 %}
+            {% else %}
                 <p class="countLikes" id="answer{{ answer.id }}">{{ answer.rating }}</p>
             {% endif %}
             <a class="btn btn-sm btn-default btn-hover-danger vote" data-id="{{ answer.id }}"
@@ -34,7 +33,7 @@
         </div>
     </div>
     <div class="questionInfo col-9">
-        <p class="question">
+        <p class="question" id="answer_text{{ answer.id }}">
             {{ answer.text }}
         </p>
         <div class="footerQuestion">
